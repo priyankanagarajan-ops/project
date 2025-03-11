@@ -1,0 +1,60 @@
+import React, { useState } from "react";
+import "./App.css";
+
+function App() {
+  let [todolist, setTodolist] = useState([]);
+
+  let saveToDolist = (event) => {
+    event.preventDefault();
+    let toname = event.target.toname.value;
+    let finalDolist = [...todolist, { name: toname, done: false }];
+    setTodolist(finalDolist);
+  };
+
+  let deleteTask = (index) => {
+    let finalDolist = todolist.filter((_, i) => i !== index);
+    setTodolist(finalDolist);
+  };
+
+  let toggleDone = (index) => {
+    let finalDolist = todolist.map((item, i) =>
+      i === index ? { ...item, done: !item.done } : item
+    );
+    setTodolist(finalDolist);
+  };
+
+  let completedTasks = todolist.filter((item) => item.done).length;
+  let totalTasks = todolist.length;
+
+  return (
+    <div className="App">
+      <h1>To Do List</h1>
+      <form onSubmit={saveToDolist}>
+        <input type="text" name="toname" />
+        <button>Save</button>
+      </form>
+      <ul>
+        {todolist.map((item, index) => (
+          <li
+            key={index}
+            style={{ textDecoration: item.done ? "line-through" : "none" }}
+          >
+            <input
+              type="checkbox"
+              checked={item.done}
+              onChange={() => toggleDone(index)}
+            />
+            {item.name}
+            <button onClick={() => deleteTask(index)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+      <div>
+        <p>Completed Tasks: {completedTasks}</p>
+        <p>Total Tasks: {totalTasks}</p>
+      </div>
+    </div>
+  );
+}
+
+export default App;
